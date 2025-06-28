@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -65,9 +65,12 @@ const apiService = {
 
   // Export to PDF
   exportToPDF: async () => {
-    const response = await apiClient.get('/export/pdf', {
-      responseType: 'blob',
-    });
+    const response = await apiClient.get('/export/pdf');
+    console.log('PDF export response:', response);
+    if (response.status !== 200) {
+      throw new Error('Failed to export PDF');
+    }
+    // Assuming the response contains the PDF data as a Blob
     return response.data;
   },
 };

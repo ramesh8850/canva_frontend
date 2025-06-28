@@ -2,6 +2,27 @@ import React from 'react';
 import { FaDownload, FaTrash, FaEye } from 'react-icons/fa';
 
 const CanvasPreview = ({ canvasState, elements, onExportPDF, onClearCanvas, isLoading }) => {
+  // Function to handle PDF download
+  // const handleDownloadPDF = () => {
+  //   if (!(onExportPDF?.success)) {
+  //     alert('Please generate PDF first');
+  //     return;
+  //   }
+
+  //   const link = document.createElement('a');
+  //   link.href = onExportPDF.url;
+  //   link.download = onExportPDF.url.split('/').pop() || 'design.pdf';
+  //   link.style.display = 'none';
+
+  //   document.body.appendChild(link);
+  //   link.click();
+
+  //   setTimeout(() => {
+  //     document.body.removeChild(link);
+  //   }, 100);
+  // };
+
+
   if (!canvasState) {
     return (
       <div className="canvas-container text-center py-5">

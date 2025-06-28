@@ -80,16 +80,33 @@ function App() {
 
     setIsLoading(true);
     try {
-      const blob = await apiService.exportToPDF();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'canvas-design.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      toast.success('PDF exported successfully!');
+      // First get the PDF URL from backend
+      const exportResponse = await apiService.exportToPDF(canvasState);
+
+      if (exportResponse.success && exportResponse.url) {
+        // Then download the actual PDF file
+        const pdfUrl = exportResponse.url.startsWith('http')
+          ? exportResponse.url
+          : `http://localhost:5000${exportResponse.url}`;
+
+        const pdfResponse = await fetch(pdfUrl);
+        const pdfBlob = await pdfResponse.blob();
+        const blobUrl = window.URL.createObjectURL(pdfBlob);
+
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = exportResponse.url.split('/').pop() || 'canvas-design.pdf';
+        document.body.appendChild(a);
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+
+        toast.success('PDF exported successfully!');
+      } else {
+        toast.error('Failed to export PDF: Invalid response');
+      }
     } catch (error) {
       toast.error('Failed to export PDF');
       console.error('Error exporting PDF:', error);
