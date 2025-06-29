@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -11,6 +12,7 @@ const apiService = {
   // Initialize canvas
   initCanvas: async (width, height) => {
     const response = await apiClient.post('/canvas/init', { width, height });
+    // console.log('Canvas initialized:', response.data);
     return response.data;
   },
 
@@ -66,7 +68,7 @@ const apiService = {
   // Export to PDF
   exportToPDF: async () => {
     const response = await apiClient.get('/export/pdf');
-    console.log('PDF export response:', response);
+    // console.log('PDF export response:', response);
     if (response.status !== 200) {
       throw new Error('Failed to export PDF');
     }

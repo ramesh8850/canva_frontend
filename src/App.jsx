@@ -72,7 +72,7 @@ function App() {
     }
   };
 
-  const exportToPDF = async () => {
+const exportToPDF = async () => {
     if (!canvasState || elements.length === 0) {
       toast.error('Please add some elements to the canvas first');
       return;
@@ -87,7 +87,7 @@ function App() {
         // Then download the actual PDF file
         const pdfUrl = exportResponse.url.startsWith('http')
           ? exportResponse.url
-          : `http://localhost:5000${exportResponse.url}`;
+          : `${process.env.REACT_APP_API_URL.replace(/\/api$/, '')}${exportResponse.url}`;
 
         const pdfResponse = await fetch(pdfUrl);
         const pdfBlob = await pdfResponse.blob();
